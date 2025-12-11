@@ -29,6 +29,7 @@
 		"vite": "^7.1.10"
 	},
 	"dependencies": {
+		"pocketbase": "^0.26.5",
 		"svelte-highlight": "^7.9.0"
 	}
 }
