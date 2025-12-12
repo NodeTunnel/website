@@ -112,9 +112,9 @@
 								<button
 									class="tooltip badge cursor-pointer badge-dash font-mono badge-primary"
 									data-tip="click to copy"
-									on:click={() => navigator.clipboard.writeText(app.id)}
+									on:click={() => navigator.clipboard.writeText(app.app_id)}
 								>
-									ID: {app.id}
+									ID: {app.app_id}
 								</button>
 							</div>
 						</div>
