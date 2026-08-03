@@ -1,28 +1,8 @@
 <script lang="ts">
-	import { pb } from '$lib/pocketbase';
-	import { goto } from '$app/navigation';
-	import { browser } from '$app/environment';
+	import { enhance } from '$app/forms';
 
-	let email = '';
-	let password = '';
-	let loading = false;
-	let error = '';
-
-	const handleSubmit = async (event: Event) => {
-		event.preventDefault();
-		if (!browser) return;
-
-		error = '';
-		loading = true;
-		try {
-			await pb.collection('users').authWithPassword(email, password);
-			goto('/dashboard');
-		} catch (err: any) {
-			error = err?.message ?? 'Login failed.';
-		} finally {
-			loading = false;
-		}
-	};
+	let { form } = $props();
+	let loading = $state(false);
 </script>
 
 <svelte:head>
@@ -34,7 +14,17 @@
 		<div class="card-body space-y-4">
 			<h1 class="text-2xl font-bold">Welcome back</h1>
 
-			<form class="space-y-4" on:submit|preventDefault={handleSubmit}>
+			<form
+				class="space-y-4"
+				method="POST"
+				use:enhance={() => {
+					loading = true;
+					return async ({ update }) => {
+						await update();
+						loading = false;
+					};
+				}}
+			>
 				<label class="form-control w-full">
 					<div class="label">
 						<span class="label-text">Email</span>
@@ -44,7 +34,7 @@
 						type="email"
 						name="email"
 						placeholder="you@example.com"
-						bind:value={email}
+						value={form?.email ?? ''}
 						required
 					/>
 				</label>
@@ -58,13 +48,12 @@
 						type="password"
 						name="password"
 						placeholder="********"
-						bind:value={password}
 						required
 					/>
 				</label>
 
-				{#if error}
-					<div class="alert alert-error">{error}</div>
+				{#if form?.error}
+					<div class="alert alert-error">{form.error}</div>
 				{/if}
 
 				<button class="btn mt-2 w-full btn-primary" type="submit" disabled={loading}>

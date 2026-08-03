@@ -1,39 +1,8 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
-	import { goto, invalidateAll } from '$app/navigation';
-	import { pb } from '$lib/pocketbase.js';
+	import { enhance } from '$app/forms';
 
-	export let data;
-	const { user } = data;
-
-	let apps = data.apps;
-	let name = '';
-	let desc = '';
-	let loading = false;
-	let error = '';
-
-	const handleSubmit = async (event: Event) => {
-		event.preventDefault();
-		if (!browser) return;
-
-		error = '';
-		loading = true;
-		try {
-			const created = await pb.collection('apps').create({
-				name,
-				description: desc,
-				dev: user?.id
-			});
-
-			apps = [...apps, created];
-		} catch (err: any) {
-			error = err?.message ?? 'Login failed.';
-		} finally {
-			loading = false;
-			name = '';
-			desc = '';
-		}
-	};
+	let { data, form } = $props();
+	let loading = $state(false);
 </script>
 
 <svelte:head>
@@ -45,7 +14,7 @@
 		<div class="flex flex-wrap items-center justify-between gap-4">
 			<div>
 				<p class="text-sm text-base-content/70">Signed in as</p>
-				<p class="text-xl font-semibold">{user?.email ?? 'User'}</p>
+				<p class="text-xl font-semibold">{data.user?.email ?? 'User'}</p>
 			</div>
 		</div>
 
@@ -58,7 +27,18 @@
 			<div class="card border border-base-300 bg-base-100">
 				<div class="card-body">
 					<h3 class="card-title text-base">Create a new app</h3>
-					<form class="space-y-4" on:submit|preventDefault={handleSubmit}>
+					<form
+						class="space-y-4"
+						method="POST"
+						action="?/create"
+						use:enhance={() => {
+							loading = true;
+							return async ({ update }) => {
+								await update();
+								loading = false;
+							};
+						}}
+					>
 						<label class="form-control w-full">
 							<div class="label">
 								<span class="label-text">Name (required)</span>
@@ -68,7 +48,7 @@
 								type="text"
 								name="name"
 								placeholder="Game name here"
-								bind:value={name}
+								required
 							/>
 						</label>
 
@@ -80,12 +60,11 @@
 								class="textarea w-full"
 								name="description"
 								placeholder="Enter a description here"
-								bind:value={desc}
 							></textarea>
 						</label>
 
-						{#if error}
-							<div class="alert alert-error">{error}</div>
+						{#if form?.error}
+							<div class="alert alert-error">{form.error}</div>
 						{/if}
 
 						<button class="btn mt-2 w-full btn-primary" type="submit" disabled={loading}>
@@ -100,11 +79,11 @@
 				</div>
 			</div>
 
-			{#if apps.length === 0}
+			{#if data.apps.length === 0}
 				<p class="text-center text-info italic">apps you create will appear here</p>
 			{:else}
 				<div class="grid gap-3 sm:grid-cols-2">
-					{#each apps as app}
+					{#each data.apps as app (app.id)}
 						<div class="card border border-base-300 bg-base-100">
 							<div class="card-body">
 								<h3 class="card-title text-base">{app.name}</h3>
@@ -112,7 +91,7 @@
 								<button
 									class="tooltip badge cursor-pointer badge-dash font-mono badge-primary"
 									data-tip="click to copy"
-									on:click={() => navigator.clipboard.writeText(app.id)}
+									onclick={() => navigator.clipboard.writeText(app.id)}
 								>
 									ID: {app.id}
 								</button>

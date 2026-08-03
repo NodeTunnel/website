@@ -1,8 +1,14 @@
 @import 'tailwindcss';
-@plugin "daisyui" {
-    themes: light --default, dark --prefersdark;
+@plugin 'daisyui' {
+	themes:
+		light --default,
+		dark --prefersdark;
 }
 
 .font-tomorrow {
-    font-family: "Tomorrow", system-ui, -apple-system, sans-serif;
+	font-family:
+		'Tomorrow',
+		system-ui,
+		-apple-system,
+		sans-serif;
 }
