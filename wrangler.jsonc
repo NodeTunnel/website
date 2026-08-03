@@ -19,10 +19,9 @@
 			"migrations_dir": "migrations"
 		}
 	],
-	// TURNSTILE_SITE_KEY is public. Uncomment to set it here instead of the
-	// dashboard -- a `vars` block overrides the dashboard value on deploy.
-	// Its secret half is TURNSTILE_SECRET_KEY; set both or neither.
-	// "vars": { "TURNSTILE_SITE_KEY": "" },
+	// TURNSTILE_SITE_KEY is public and overrides the dashboard value on deploy.
+	// Its secret half, TURNSTILE_SECRET_KEY, is set with `wrangler secret put`.
+	"vars": { "TURNSTILE_SITE_KEY": "0x4AAAAAAEFfrGvMHfdoNEJ_" },
 
 	// Changing `namespace_id` resets that limiter. `period` must be 10 or 60.
 	"ratelimits": [
