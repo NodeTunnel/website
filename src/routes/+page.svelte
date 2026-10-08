@@ -1,4 +1,5 @@
 <script>
+	import RelayStatus from '$lib/components/RelayStatus.svelte';
 	import Highlight from 'svelte-highlight';
 	import gdscript from 'svelte-highlight/languages/javascript';
 	import horizonDark from 'svelte-highlight/styles/github-dark';
@@ -82,6 +83,8 @@ func join(room_id):
 		Don't want to self host? Don't worry! NodeTunnel provides <b>free</b> relay servers that anyone can
 		use.
 	</p>
+
+	<RelayStatus />
 
 	<a href="https://github.com/NodeTunnel/relay-server" class="btn mt-2 btn-sm md:btn-md"
 		>See server source</a

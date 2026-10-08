@@ -1,6 +1,4 @@
 <script lang="ts">
-	import RelayStatus from './RelayStatus.svelte';
-
 	let { user }: { user: { id: string; email: string } | null } = $props();
 </script>
 
@@ -41,7 +39,6 @@
 			</ul>
 		</div>
 		<a href="/" class="font-tomorrow text-4xl lg:ml-6">nt</a>
-		<span class="ml-3 flex items-center"><RelayStatus /></span>
 	</div>
 	<div class="navbar-center hidden lg:flex">
 		<ul class="menu menu-horizontal px-1">

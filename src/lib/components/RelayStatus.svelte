@@ -3,23 +3,18 @@
 
 	const POLL_MS = 60_000;
 
+	// Public relays, by RELAY_ID. Listed even before their first heartbeat.
+	const PUBLIC_RELAYS = ['us-east'];
+
 	let relays = $state<RelayStatus[] | null>(null);
 
-	// Unknown (grey) until the first answer, and on fetch errors -- not down.
-	let status: 'unknown' | 'up' | 'down' = $derived(
-		!relays || relays.length === 0 ? 'unknown' : relays.every((r) => r.up) ? 'up' : 'down'
-	);
-
-	let label = $derived(
-		!relays || relays.length === 0
-			? 'Relay status unknown'
-			: relays
-					.map((r) =>
-						r.up
-							? `Relay ${r.id}: online · ${r.players} player${r.players === 1 ? '' : 's'}`
-							: `Relay ${r.id}: offline`
-					)
-					.join('\n')
+	let rows = $derived(
+		PUBLIC_RELAYS.map((id) => {
+			const relay = relays?.find((r) => r.id === id);
+			// Unknown until the first answer, and on fetch errors -- not down.
+			const status: 'unknown' | 'up' | 'down' = !relays ? 'unknown' : relay?.up ? 'up' : 'down';
+			return { host: `${id}.nodetunnel.io`, status };
+		})
 	);
 
 	async function refresh() {
@@ -38,20 +33,34 @@
 	});
 </script>
 
-<!-- role="img": a named indicator, not a live region that announces every poll. -->
-<div
-	class="tooltip tooltip-bottom whitespace-pre-line"
-	data-tip={label}
-	role="img"
-	aria-label={label}
->
-	<div
-		aria-hidden="true"
-		class={[
-			'status status-md',
-			status === 'up' && 'status-success',
-			status === 'down' && 'status-error',
-			status === 'unknown' && 'status-neutral'
-		]}
-	></div>
+<div class="mt-4 max-w-md overflow-x-auto rounded-box border border-base-300">
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Relay</th>
+				<th>Status</th>
+			</tr>
+		</thead>
+		<tbody>
+			{#each rows as row (row.host)}
+				<tr>
+					<td class="font-mono">{row.host}</td>
+					<td>
+						<span class="flex items-center gap-2">
+							<span
+								aria-hidden="true"
+								class={[
+									'status status-md',
+									row.status === 'up' && 'status-success',
+									row.status === 'down' && 'status-error',
+									row.status === 'unknown' && 'status-neutral'
+								]}
+							></span>
+							{row.status === 'up' ? 'Online' : row.status === 'down' ? 'Offline' : 'Checking…'}
+						</span>
+					</td>
+				</tr>
+			{/each}
+		</tbody>
+	</table>
 </div>
