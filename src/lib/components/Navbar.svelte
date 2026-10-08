@@ -1,4 +1,6 @@
 <script lang="ts">
+	import RelayStatus from './RelayStatus.svelte';
+
 	let { user }: { user: { id: string; email: string } | null } = $props();
 </script>
 
@@ -23,7 +25,7 @@
 			</div>
 			<ul
 				tabindex="-1"
-				class="dropdown-content menu z-1 mt-3 w-52 menu-sm rounded-box bg-base-100 p-2 shadow"
+				class="menu dropdown-content z-1 mt-3 w-52 menu-sm rounded-box bg-base-100 p-2 shadow"
 			>
 				<li><a href="https://nodetunnel.github.io/docs/">Docs</a></li>
 				<li>
@@ -39,6 +41,7 @@
 			</ul>
 		</div>
 		<a href="/" class="font-tomorrow text-4xl lg:ml-6">nt</a>
+		<span class="ml-3 flex items-center"><RelayStatus /></span>
 	</div>
 	<div class="navbar-center hidden lg:flex">
 		<ul class="menu menu-horizontal px-1">
