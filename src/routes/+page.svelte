@@ -106,6 +106,9 @@ func join(room_id):
 		<i>Prefer to contribute in other ways? Code contributions are also greatly appreciated!</i>
 	</p>
 	<div class="flex flex-row gap-2">
-		<a href="https://ko-fi.com/curtjs" class="btn btn-sm btn-primary">Donate</a>
+		<a href="https://www.patreon.com/c/AndrooDev" class="btn btn-sm btn-primary">Patreon</a>
+		<a href="https://github.com/sponsors/jonandrewdavis" class="btn btn-sm btn-primary"
+			>GitHub Sponsors</a
+		>
 	</div>
 </div>
